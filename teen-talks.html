@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Teen Talks – Instituto Oriente</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Inter',sans-serif;background:#EEF1F7;min-height:100vh;}
+
+    .hdr{background:#0B1F3A;padding:1.4rem 1.5rem;border-bottom:4px solid #F5C800;text-align:center;}
+    .hdr-title{font-family:'Bebas Neue',sans-serif;font-size:42px;color:#F5C800;letter-spacing:6px;line-height:1;}
+    .hdr-sub{font-size:12px;color:#FFFFFF;letter-spacing:2px;margin-top:4px;font-weight:700;text-transform:uppercase;}
+    .stripe{height:5px;background:linear-gradient(90deg,#F5C800,#1A4FAF,#C8281E);}
+
+    .body{padding:1rem 1rem 3rem;max-width:960px;margin:0 auto;}
+
+    .instruccion{background:#FFFFFF;border:2px solid rgba(11,31,58,0.15);border-radius:12px;padding:.9rem 1.1rem;margin-bottom:1.2rem;font-size:13px;color:#0B1F3A;font-weight:600;line-height:1.5;border-left:4px solid #F5C800;}
+
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1.4rem;}
+    .stat{background:#FFFFFF;border-radius:10px;padding:10px 12px;border:1.5px solid rgba(11,31,58,0.2);}
+    .stat-n{font-family:'Bebas Neue',sans-serif;font-size:30px;color:#0B1F3A;line-height:1;}
+    .stat-l{font-size:11px;color:#0B1F3A;margin-top:2px;font-weight:700;}
+
+    .sec{font-size:11px;font-weight:800;color:#0B1F3A;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:10px;}
+
+    .escenarios{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;}
+
+    .card{background:#FFFFFF;border:2px solid rgba(11,31,58,0.15);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .15s;}
+    .card:hover:not(.card-full){border-color:#1A4FAF;}
+    .card-full{opacity:.6;}
+
+    .card-head{padding:.9rem 1rem .7rem;border-bottom:1px solid rgba(11,31,58,0.08);}
+    .card-lugar{font-family:'Bebas Neue',sans-serif;font-size:22px;color:#0B1F3A;letter-spacing:2px;line-height:1;}
+    .card-tipo{display:inline-block;font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px;margin-top:4px;}
+    .tipo-platica{background:#DDEAFF;color:#0B2E7A;}
+    .tipo-foro{background:#FADDDD;color:#7A0000;}
+    .tipo-taller{background:#D6F0E6;color:#084D2A;}
+
+    .cap-wrap{padding:.5rem 1rem .4rem;}
+    .cap-bar{height:5px;background:#DDE3EE;border-radius:3px;overflow:hidden;margin-bottom:4px;}
+    .cap-fill{height:100%;border-radius:3px;transition:width .4s;}
+    .cap-text{font-size:11px;color:#1A2A45;display:flex;justify-content:space-between;font-weight:700;}
+
+    .card-talks{padding:.4rem 1rem .6rem;flex:1;}
+    .talk-item{font-size:11.5px;color:#1A2A45;padding:4px 0;border-bottom:1px solid rgba(11,31,58,0.06);line-height:1.4;}
+    .talk-item:last-child{border-bottom:none;}
+    .talk-title{font-weight:700;color:#0B1F3A;}
+    .talk-who{color:#5A6478;font-size:11px;}
+
+    .card-foot{padding:.7rem 1rem .9rem;}
+    .btn-reg{width:100%;padding:9px;border-radius:8px;font-size:13px;font-weight:800;cursor:pointer;border:none;background:#0B1F3A;color:#FFFFFF;font-family:'Inter',sans-serif;transition:background .15s;}
+    .btn-reg:hover:not(:disabled){background:#1A4FAF;}
+    .btn-reg:disabled{background:#B0B8C8;color:#FFFFFF;cursor:not-allowed;}
+
+    .modal-bg{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(11,31,58,.55);display:flex;align-items:center;justify-content:center;z-index:100;padding:1rem;}
+    .modal{background:#FFFFFF;border-radius:14px;padding:1.5rem;width:100%;max-width:340px;border-top:4px solid #F5C800;}
+    .modal-title{font-family:'Bebas Neue',sans-serif;font-size:22px;color:#0B1F3A;letter-spacing:1px;margin-bottom:2px;}
+    .modal-sub{font-size:12px;color:#1A2A45;margin-bottom:1rem;line-height:1.5;font-weight:600;}
+    .modal-lbl{font-size:12px;font-weight:800;color:#0B1F3A;margin-bottom:4px;display:block;}
+    .modal-inp{width:100%;margin-bottom:10px;padding:10px 12px;border:2px solid #0B1F3A;border-radius:8px;font-size:15px;font-family:'Inter',sans-serif;color:#0B1F3A;background:#FFFFFF;outline:none;font-weight:600;}
+    .modal-inp:focus{border-color:#1A4FAF;}
+    .modal-err{font-size:12px;color:#C8281E;margin-bottom:8px;display:none;font-weight:700;}
+    .modal-btns{display:flex;gap:8px;margin-top:4px;}
+    .modal-btns button{flex:1;padding:9px;border-radius:8px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;}
+    .btn-ok{background:#0B1F3A;color:#FFFFFF;border:none;}
+    .btn-ok:hover{background:#1A4FAF;}
+    .btn-no{background:#FFFFFF;color:#0B1F3A;border:2px solid #0B1F3A;}
+    .btn-no:hover{background:#0B1F3A;color:#F5C800;}
+
+    .ok-wrap{text-align:center;padding:.5rem 0;}
+    .ok-icon{font-size:50px;color:#0F7A50;margin-bottom:10px;}
+    .ok-title{font-family:'Bebas Neue',sans-serif;font-size:26px;color:#0B1F3A;letter-spacing:1px;margin-bottom:6px;}
+    .ok-sub{font-size:13px;color:#1A2A45;margin-bottom:1.2rem;line-height:1.6;font-weight:600;}
+
+    .adm-lnk{font-size:12px;color:#0B1F3A;text-decoration:underline;cursor:pointer;margin-top:1.5rem;display:inline-block;font-weight:800;}
+    .adm-panel{background:#FFFFFF;border-radius:10px;border:2px solid rgba(11,31,58,0.2);padding:1rem;margin-top:8px;}
+    .adm-hdr-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+    .adm-hdr{font-size:12px;font-weight:800;color:#0B1F3A;letter-spacing:1px;text-transform:uppercase;}
+    .adm-export{font-size:11px;font-weight:800;padding:5px 12px;border-radius:6px;background:#0B1F3A;color:#F5C800;border:none;cursor:pointer;font-family:'Inter',sans-serif;}
+    .adm-section{margin-bottom:1rem;}
+    .adm-section-title{font-size:11px;font-weight:800;color:#1A4FAF;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;padding-bottom:4px;border-bottom:2px solid #1A4FAF;}
+    .adm-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(11,31,58,0.07);font-size:12px;gap:8px;}
+    .adm-row:last-child{border-bottom:none;}
+    .adm-empty{font-size:12px;color:#9BA3B2;padding:6px 0;font-style:italic;}
+
+    @media(max-width:480px){
+      .stats{grid-template-columns:repeat(3,1fr);}
+      .hdr-title{font-size:32px;}
+      .escenarios{grid-template-columns:1fr;}
+    }
+  </style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-title">Teen Talks</div>
+  <div class="hdr-sub">Instituto Oriente · Registro de escenarios</div>
+</div>
+<div class="stripe"></div>
+
+<div class="body">
+  <div class="instruccion">
+    📌 Elige <strong>un escenario</strong> al que quieras asistir y regístrate con tu nombre, grupo y matrícula. Cuando un escenario se llene, se cierra automáticamente.
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-n" id="s1">0</div><div class="stat-l">escenarios</div></div>
+    <div class="stat"><div class="stat-n" id="s2">0</div><div class="stat-l">registros</div></div>
+    <div class="stat"><div class="stat-n" id="s3">0</div><div class="stat-l">llenos</div></div>
+  </div>
+
+  <div class="sec">Elige tu escenario</div>
+  <div class="escenarios" id="escenarios"></div>
+
+  <div class="adm-lnk" onclick="toggleAdm()">▸ Panel de administración</div>
+  <div class="adm-panel" id="admp" style="display:none"></div>
+</div>
+
+<script>
+const ESCENARIOS = [
+  {
+    id:'carrasco', lugar:'Carrasco', tipo:'platica', tipoLabel:'Pláticas', cap:214,
+    talks:[
+      {t:'La incomodidad también es parte de la vida',p:'Juan Pablo Montiel Carpiña y Marcelo Espinosa Flores'},
+      {t:'Alguien sigue aquí',p:'Fernanda Frese'},
+      {t:'¿Podemos decidir por completo?',p:'Ángel Baltazar Miranda'},
+      {t:'Vínculos verdaderos o superficiales',p:'Sofía Ortiz Sevilla'},
+      {t:'No siempre se nota',p:'Lucine Sophia Quiroz Luna'},
+      {t:'¿La escuela forma o limita?',p:'Bettina De Unánue y Sofía Pérez Villa'},
+      {t:'¿Amiga o hater?',p:'Sofía Tobón Martínez'},
+      {t:'La mirada del otro nos construye o nos destruye',p:'Ximena Montero Martínez'},
+      {t:'Bullying y cómo se castiga la diferencia',p:'Emma Cecilia Pedroza Castañeda'},
+      {t:'¿El mal nace o se hace?',p:'Vidal de Jesús Montoro Reyes'},
+      {t:'Ya no somos los mismos',p:'Frida Guerrero Sánchez'},
+      {t:'Lo que nadie te contó sobre el feminismo',p:'Adele Sofía Ramírez Lechuga'},
+    ]
+  },
+  {
+    id:'audiovisual1', lugar:'Audiovisual 1', tipo:'platica', tipoLabel:'Pláticas', cap:44,
+    talks:[
+      {t:'Actitudes tóxicas',p:'Nathaly Amayrani Cruz Machicado'},
+      {t:'Personas raras',p:'Ximena Cabrera Torres'},
+      {t:'La presión en el deporte',p:'Donatella Boulat Maldonado y Sara Michelle Cortes Lozano'},
+      {t:'¿Por qué necesitamos tiempo para nosotros?',p:'Valentina Díaz Aguirre'},
+      {t:'Cómo el deporte te ayuda a ser más disciplinado',p:'Ian Paul Domínguez Candia'},
+      {t:'Apego ansioso',p:'Danna Itzel Román Cordero'},
+      {t:'Cuando nada parece suficiente',p:'Sofía Gordian Flores y Ana Sofía Cabañas Martínez'},
+    ]
+  },
+  {
+    id:'audiovisual2', lugar:'Audiovisual 2', tipo:'platica', tipoLabel:'Pláticas', cap:44,
+    talks:[
+      {t:'Mi reflejo está en otros',p:'Arisbeth Ixchel Cruz León'},
+      {t:'Superar lesiones en el deporte',p:'Sophie El Badri Fortiz'},
+      {t:'¿Cómo podemos generar mucho dinero con poco capital?',p:'Leonardo Zúñiga Téllez'},
+      {t:'Sigue adelante a pesar de las circunstancias',p:'Arantza Montserrat Buenabad Guizar'},
+      {t:'Adolescencia y sus retos',p:'Isabella Amelie Cuevas Cervantes'},
+      {t:'¿Por qué los adolescentes se desconectan del mundo exterior?',p:'Luisa Camila Salazar Herrera'},
+      {t:'El miedo a crecer',p:'Bárbara Galindo Sánchez'},
+    ]
+  },
+  {
+    id:'belarmino', lugar:'Belarmino', tipo:'foro', tipoLabel:'Foro de debate', cap:170,
+    talks:[
+      {t:'La rueda del ratón',p:'Santiago Soriano Sampedro y Leonardo Vega Morales'},
+      {t:'Identificar si una relación es sana o está afectando tu bienestar',p:'Cristian Emiliano González Aguilar'},
+      {t:'¿Cómo ganaría el Puebla?',p:'Andrés Unanue Madero y Emilio Frankenberger Dorantes'},
+      {t:'Amistades verdaderas',p:'Liana Trujillo Aguilar, Aranza Coronel Pozos, Natalia Gómez'},
+      {t:'Cambios en la adolescencia',p:'Maximiliano Pozos Vega'},
+      {t:'Ansiedad ¿Amiga o enemiga?',p:'Ana Sofía Vázquez Vázquez'},
+      {t:'¿Cómo podríamos cambiar la educación con nuestro voto?',p:'Pedrito López Pérez'},
+      {t:'Dando mi punto de vista y buscando puntos clave en otras opiniones',p:'Emilio Cabrera Trujillo'},
+    ]
+  },
+  {
+    id:'biblioteca', lugar:'Salón de Biblioteca', tipo:'taller', tipoLabel:'Talleres', cap:70,
+    talks:[
+      {t:'Gustos y prejuicios',p:'Michelle Mauro Gálvez y Kevin Alberto Padilla Guerra'},
+      {t:'Memory box',p:'Ivonne Cervantes Ramírez y Nathalie Aucamp Romo'},
+      {t:'Journaling de emociones',p:'Rebeca Lamothe Sarmiento y Renata Viveros Silva'},
+    ]
+  },
+];
+
+// reg stores: { escenarioId: [{nombre, grupo, matricula}, ...] }
+let reg = {};
+try { reg = JSON.parse(localStorage.getItem('tt_v3') || '{}'); } catch(e) {}
+let escenario = null, ok = false, adm = false;
+
+function sv() { try { localStorage.setItem('tt_v3', JSON.stringify(reg)); } catch(e) {} }
+function cn(id) { return (reg[id] || []).length; }
+function barColor(pct) { return pct > 80 ? '#C8281E' : pct > 50 ? '#D4A017' : '#1A4FAF'; }
+
+function upStats() {
+  const llenos = ESCENARIOS.filter(e => cn(e.id) >= e.cap).length;
+  const total = Object.values(reg).reduce((s,a) => s + a.length, 0);
+  document.getElementById('s1').textContent = ESCENARIOS.length;
+  document.getElementById('s2').textContent = total;
+  document.getElementById('s3').textContent = llenos;
+}
+
+function renderEscenarios() {
+  document.getElementById('escenarios').innerHTML = ESCENARIOS.map(e => {
+    const c = cn(e.id), pct = Math.min(100, Math.round(c/e.cap*100)), full = c >= e.cap;
+    const tipoClass = e.tipo==='platica'?'tipo-platica':e.tipo==='foro'?'tipo-foro':'tipo-taller';
+    const bc = barColor(pct);
+    const talksHtml = e.talks.map(t =>
+      `<div class="talk-item"><span class="talk-title">${t.t}</span><br><span class="talk-who">${t.p}</span></div>`
+    ).join('');
+    return `<div class="card ${full?'card-full':''}">
+      <div class="card-head">
+        <div class="card-lugar">${e.lugar}</div>
+        <span class="card-tipo ${tipoClass}">${e.tipoLabel}</span>
+      </div>
+      <div class="cap-wrap">
+        <div class="cap-bar"><div class="cap-fill" style="width:${pct}%;background:${bc}"></div></div>
+        <div class="cap-text"><span>${c} de ${e.cap} registrados</span><span style="color:${full?'#C8281E':'#0A5E35'}">${full?'LLENO':'disponible'}</span></div>
+      </div>
+      <div class="card-talks">${talksHtml}</div>
+      <div class="card-foot">
+        <button class="btn-reg" onclick="openM('${e.id}')" ${full?'disabled':''}>${full?'Sin lugares':'Registrarme aquí'}</button>
+      </div>
+    </div>`;
+  }).join('');
+  upStats();
+}
+
+function openM(id) { escenario = ESCENARIOS.find(e => e.id === id); ok = false; renderM(); }
+function closeM() { escenario = null; const el = document.getElementById('mbg'); if(el) el.remove(); }
+
+function renderM() {
+  const ex = document.getElementById('mbg'); if(ex) ex.remove();
+  if(!escenario) return;
+  const div = document.createElement('div');
+  div.id = 'mbg'; div.className = 'modal-bg';
+  div.onclick = e => { if(e.target === div) closeM(); };
+  if(ok) {
+    div.innerHTML = `<div class="modal"><div class="ok-wrap">
+      <div class="ok-icon">✓</div>
+      <div class="ok-title">¡Registrado!</div>
+      <div class="ok-sub">Quedaste en el escenario<br><strong>${escenario.lugar}</strong><br><span style="font-size:11px;color:#5A6478">Guarda esta pantalla como comprobante</span></div>
+      <button class="btn-reg" onclick="closeM()" style="max-width:180px;margin:0 auto;display:block">Cerrar</button>
+    </div></div>`;
+  } else {
+    div.innerHTML = `<div class="modal">
+      <div class="modal-title">Registrarme</div>
+      <div class="modal-sub">Escenario: <strong style="color:#1A4FAF">${escenario.lugar}</strong><br>${escenario.tipoLabel} · ${escenario.cap - cn(escenario.id)} lugares disponibles</div>
+      <label class="modal-lbl">Nombre completo</label>
+      <input class="modal-inp" type="text" id="minombre" placeholder="ej. Ana García López" autocomplete="name"/>
+      <label class="modal-lbl">Grado y grupo</label>
+      <input class="modal-inp" type="text" id="migrupo" placeholder="ej. 2°B" autocomplete="off"/>
+      <label class="modal-lbl">Matrícula</label>
+      <input class="modal-inp" type="text" id="mimat" placeholder="ej. 1920475" inputmode="numeric"/>
+      <div id="merr" class="modal-err"></div>
+      <div class="modal-btns">
+        <button class="btn-no" onclick="closeM()">Cancelar</button>
+        <button class="btn-ok" onclick="conf()">Confirmar</button>
+      </div>
+    </div>`;
+  }
+  document.body.appendChild(div);
+  if(!ok) setTimeout(() => { const i = document.getElementById('minombre'); if(i) i.focus(); }, 50);
+}
+
+function conf() {
+  const nombre = document.getElementById('minombre').value.trim();
+  const grupo  = document.getElementById('migrupo').value.trim();
+  const mat    = document.getElementById('mimat').value.trim();
+  const err    = document.getElementById('merr');
+  err.style.display = 'none';
+
+  if(!nombre) { err.textContent = 'Ingresa tu nombre completo'; err.style.display='block'; return; }
+  if(!grupo)  { err.textContent = 'Ingresa tu grado y grupo'; err.style.display='block'; return; }
+  if(!mat)    { err.textContent = 'Ingresa tu matrícula'; err.style.display='block'; return; }
+  if(!/^\d{5,10}$/.test(mat)) { err.textContent = 'La matrícula debe tener entre 5 y 10 dígitos'; err.style.display='block'; return; }
+
+  // Check if matricula already registered anywhere
+  const yaReg = Object.entries(reg).find(([,arr]) => arr.some(r => r.matricula === mat));
+  if(yaReg) { err.textContent = 'Esta matrícula ya tiene registro en otro escenario'; err.style.display='block'; return; }
+
+  if(!reg[escenario.id]) reg[escenario.id] = [];
+  if(reg[escenario.id].some(r => r.matricula === mat)) { err.textContent = 'Ya estás registrado en este escenario'; err.style.display='block'; return; }
+
+  reg[escenario.id].push({ nombre, grupo, matricula: mat });
+  sv(); ok = true; renderM(); renderEscenarios();
+}
+
+function toggleAdm() {
+  if(adm) {
+    adm = false;
+    document.getElementById('admp').style.display = 'none';
+    document.querySelector('.adm-lnk').textContent = '▸ Panel de administración';
+    return;
+  }
+  const pw = prompt('Ingresa la contraseña para acceder al panel de administración:');
+  if(pw === null) return;
+  if(pw !== 'TeenT2026') {
+    alert('Contraseña incorrecta.');
+    return;
+  }
+  adm = true;
+  document.getElementById('admp').style.display = 'block';
+  document.querySelector('.adm-lnk').textContent = '▾ Panel de administración';
+  renderAdm();
+}
+
+function renderAdm() {
+  const p = document.getElementById('admp');
+  const sections = ESCENARIOS.map(e => {
+    const lista = (reg[e.id] || []);
+    const rows = lista.length
+      ? lista.map((r,i) => `<div class="adm-row">
+          <span style="color:#0B1F3A;font-weight:700;min-width:24px">${i+1}.</span>
+          <span style="flex:1;color:#0B1F3A;font-weight:600">${r.nombre}</span>
+          <span style="color:#5A6478;margin:0 8px">${r.grupo}</span>
+          <span style="color:#1A4FAF;font-weight:800">${r.matricula}</span>
+        </div>`).join('')
+      : `<div class="adm-empty">Sin registros aún</div>`;
+    return `<div class="adm-section">
+      <div class="adm-section-title">${e.lugar} — ${lista.length}/${e.cap}</div>
+      ${rows}
+    </div>`;
+  }).join('');
+
+  p.innerHTML = `
+    <div class="adm-hdr-row">
+      <div class="adm-hdr">Registros por escenario</div>
+      <button class="adm-export" onclick="exportCSV()">Exportar CSV</button>
+    </div>
+    ${sections}`;
+}
+
+function exportCSV() {
+  let csv = 'Escenario,Nombre,Grupo,Matrícula\n';
+  ESCENARIOS.forEach(e => {
+    (reg[e.id] || []).forEach(r => {
+      csv += `"${e.lugar}","${r.nombre}","${r.grupo}","${r.matricula}"\n`;
+    });
+  });
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'teen-talks-registros.csv';
+  a.click(); URL.revokeObjectURL(url);
+}
+
+renderEscenarios();
+</script>
+</body>
+</html>
